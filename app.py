@@ -1,4 +1,4 @@
-from customllm import CustomLLM
+from langchain_customLLM import CustomLLM
 
 from langchain.chains import LLMChain
 from langchain.prompts import PromptTemplate
@@ -8,7 +8,7 @@ from langchain_community.embeddings.sentence_transformer import SentenceTransfor
 from langchain_community.vectorstores import Chroma
 
 
-# load the document 
+# load the document
 loader = TextLoader("./state_of_the_union.txt")
 documents = loader.load()
 
@@ -29,19 +29,23 @@ docs = db.similarity_search(query)
 # print results
 print(docs[0].page_content)
 
-# question = "Who won the FIFA World Cup in the year 1994? "
-# context = "Portugal won the World Cup in 1994."
+question = "Who won the FIFA World Cup in the year 1994? "
+context = "Portugal won the World Cup in 1994."
 
-# template = """Instructions: Use only the following context to answer the question.
+template = f"""Instructions: Use only the following context to answer the question.
 
-# Context: {context}
-# Question: {question}
+Context: {context}
+Question: {question}
 
-# Answer: The FIFA World Cup winner in 1994 is"""
+Answer: The FIFA World Cup winner in 1994 is"""
 
-# prompt = PromptTemplate(template=template, input_variables=["context", "question"])
+print(template)
 
-# llm = CustomLLM()
-# llm_chain = LLMChain(prompt=prompt, llm=llm)
+prompt = PromptTemplate(template=template, input_variables=["context", "question"])
 
-# print(llm_chain.invoke({"context": context, "question": question}))
+print(prompt)
+
+llm = CustomLLM(n=200)
+llm_chain = LLMChain(prompt=prompt, llm=llm)
+
+print(llm_chain.invoke({"context": context, "question": question}))
